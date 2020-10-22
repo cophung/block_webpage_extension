@@ -11,18 +11,22 @@ document.addEventListener("click", function (e) {
 
 document.getElementById("btnAdd").addEventListener("click", function () {
   let newUrl = document.getElementById("newUrl").value;
-
-  let httpUrl = `http://www.${newUrl}/*`;
-  let httpsUrl = `https://www.${newUrl}/*`;
-
   let urls = JSON.parse(localStorage.getItem("urls"));
 
+  let patternHttps = /https/gim;
+  newUrl = newUrl.replace(/\s/g, "");
+  let resultHttps = patternHttps.test(newUrl);
+
+  if (!resultHttps) {
+    newUrl = "https://" + newUrl + "/";
+  }
+
   if (urls) {
-    urls.push(httpUrl, httpsUrl);
+    urls.push(newUrl);
   } else {
     localStorage.setItem("urls", JSON.stringify([]));
     urls = JSON.parse(localStorage.getItem("urls"));
-    urls.push(httpUrl, httpsUrl);
+    urls.push(newUrl);
   }
 
   localStorage.setItem("urls", JSON.stringify(urls));
