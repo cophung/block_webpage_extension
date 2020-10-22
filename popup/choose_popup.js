@@ -1,3 +1,5 @@
+document.getElementById("btnAdd").disabled = true;
+
 document.addEventListener("click", function (e) {
   if (!e.target.classList.contains("page-choice")) {
     return;
@@ -7,6 +9,14 @@ document.addEventListener("click", function (e) {
   browser.tabs.create({
     url: chosenPage,
   });
+});
+
+document.getElementById("newUrl").addEventListener("change", function () {
+  if (document.getElementById("newUrl").value === "") {
+    document.getElementById("btnAdd").disabled = true;
+  } else {
+    document.getElementById("btnAdd").disabled = false;
+  }
 });
 
 document.getElementById("btnAdd").addEventListener("click", function () {
