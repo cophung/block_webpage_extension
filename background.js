@@ -1,5 +1,4 @@
 let manifest = browser.runtime.getManifest();
-let listUrl = ["https://www.youtube.com/*", "https://thanhnien.vn/*"];
 
 function blockSite(requestDetails) {
   browser.notifications.create("", {
@@ -14,7 +13,7 @@ function blockSite(requestDetails) {
 browser.webRequest.onBeforeRequest.addListener(
   blockSite,
   {
-    urls: listUrl,
+    urls: JSON.parse(localStorage.getItem("urls")),
   },
   ["blocking"]
 );
