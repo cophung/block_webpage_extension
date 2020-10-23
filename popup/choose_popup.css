@@ -9,7 +9,7 @@ body {
   text-align: center;
 }
 
-.form-add-url {
+.form-add {
   margin: 5px 5px;
   font-size: 1.3em;
   display: flex;
@@ -21,7 +21,7 @@ body {
   flex-grow: 1;
 }
 
-.show-all-choice {
+.show-all {
   width: 100%;
   padding: 4px;
   font-size: 1.3em;
@@ -29,10 +29,20 @@ body {
   cursor: pointer;
 }
 
-.show-all-choice:hover {
+.show-all:hover {
   background-color: #cff2f2;
 }
 
-.list-url {
-  margin-right: 10px;
+table,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#table-url {
+  width: 100%;
+}
+
+td {
+  text-align: center;
 }
