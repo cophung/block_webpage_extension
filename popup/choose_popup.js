@@ -1,14 +1,23 @@
 document.getElementById("btnAdd").disabled = true;
 
 document.addEventListener("click", function (e) {
-  if (!e.target.classList.contains("page-choice")) {
+  if (!e.target.classList.contains("show-all-choice")) {
     return;
   }
 
-  var chosenPage = "https://" + e.target.textContent;
-  browser.tabs.create({
-    url: chosenPage,
-  });
+  let urls = JSON.parse(localStorage.getItem("urls"));
+  let listUrl = "";
+
+  if (!urls) {
+    localStorage.setItem("urls", JSON.stringify([]));
+    urls = JSON.parse(localStorage.getItem("urls"));
+  }
+
+  for (let i = 0; i < urls.length; i++) {
+    listUrl += "<li>" + urls[i] + "</li>";
+  }
+
+  document.getElementById("list-url").innerHTML = listUrl;
 });
 
 document.getElementById("newUrl").addEventListener("change", function () {

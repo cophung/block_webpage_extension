@@ -21,7 +21,7 @@ body {
   flex-grow: 1;
 }
 
-.page-choice {
+.show-all-choice {
   width: 100%;
   padding: 4px;
   font-size: 1.3em;
@@ -29,6 +29,10 @@ body {
   cursor: pointer;
 }
 
-.page-choice:hover {
+.show-all-choice:hover {
   background-color: #cff2f2;
+}
+
+.list-url {
+  margin-right: 10px;
 }
