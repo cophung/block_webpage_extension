@@ -1,16 +1,32 @@
 let manifest = browser.runtime.getManifest();
 
-document.getElementById("btnAdd").disabled = true;
-document.getElementById("btn-delete").disabled = true;
+let btnAdd = document.getElementById("btn-add");
+let btnDel = document.getElementById("btn-delete");
+let docNewUrl = document.getElementById("new-url");
+let docDelUrl = document.getElementById("url-delete");
+let btnShowAll = document.getElementById("show-all");
+let tableUrl = document.getElementById("table-url");
+
+btnAdd.disabled = true;
+btnDel.disabled = true;
+
+function browserNof(newUrl, event) {
+  browser.notifications.create("", {
+    title: `${manifest.name}`,
+    iconUrl: browser.runtime.getURL("icons/icon-60.png"),
+    message: `Trang ${newUrl} ${event}`,
+    type: "basic",
+  });
+}
 
 //begin input new url
-document.getElementById("btnAdd").addEventListener("click", function () {
-  let newUrl = document.getElementById("newUrl").value;
+btnAdd.addEventListener("click", function () {
+  let newUrl = docNewUrl.value;
   let urls = JSON.parse(localStorage.getItem("urls"));
-
   let patternHttps = /https/gim;
+  let resultHttps = patternHttps.test(newUrl); //test exist https
+
   newUrl = newUrl.replace(/\s/g, "");
-  let resultHttps = patternHttps.test(newUrl);
 
   if (!resultHttps) {
     newUrl = "https://" + newUrl + "/";
@@ -18,31 +34,16 @@ document.getElementById("btnAdd").addEventListener("click", function () {
 
   if (urls) {
     if (urls.find((item) => item === newUrl)) {
-      browser.notifications.create("", {
-        title: `${manifest.name}`,
-        iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-        message: `Trang ${newUrl} của bạn đã tồn tại trong danh sách chặn`,
-        type: "basic",
-      });
+      browserNof(newUrl, "đã tồn tại trong danh sách chặn");
     } else {
       urls.push(newUrl);
-      browser.notifications.create("", {
-        title: `${manifest.name}`,
-        iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-        message: `Trang ${newUrl} của bạn đã được thêm vào danh sách chặn`,
-        type: "basic",
-      });
+      browserNof(newUrl, "đã được thêm vào danh sách chặn");
     }
   } else {
     localStorage.setItem("urls", JSON.stringify([]));
     urls = JSON.parse(localStorage.getItem("urls"));
     urls.push(newUrl);
-    browser.notifications.create("", {
-      title: `${manifest.name}`,
-      iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-      message: `Trang ${newUrl} của bạn đã được thêm vào danh sách chặn`,
-      type: "basic",
-    });
+    browserNof(newUrl, "đã được thêm vào danh sách chặn");
   }
 
   localStorage.setItem("urls", JSON.stringify(urls));
@@ -52,55 +53,53 @@ document.getElementById("btnAdd").addEventListener("click", function () {
 //end input new url
 
 //begin button add
-document.getElementById("newUrl").addEventListener("change", function () {
-  if (document.getElementById("newUrl").value === "") {
-    document.getElementById("btnAdd").disabled = true;
+docNewUrl.addEventListener("change", function () {
+  if (docNewUrl.value === "") {
+    btnAdd.disabled = true;
   } else {
-    document.getElementById("btnAdd").disabled = false;
+    btnAdd.disabled = false;
   }
 });
 //end button add
 
 //begin show all
-document
-  .getElementsByClassName("show-all")[0]
-  .addEventListener("click", function () {
-    //begin show table
-    let urls = JSON.parse(localStorage.getItem("urls"));
-    let listUrl = "";
+btnShowAll.addEventListener("click", function () {
+  //begin show table
+  let urls = JSON.parse(localStorage.getItem("urls"));
+  let listUrl = "";
 
-    if (!urls) {
-      localStorage.setItem("urls", JSON.stringify([]));
-      urls = JSON.parse(localStorage.getItem("urls"));
-    }
+  if (!urls) {
+    localStorage.setItem("urls", JSON.stringify([]));
+    urls = JSON.parse(localStorage.getItem("urls"));
+  }
 
-    for (let i = 0; i < urls.length; i++) {
-      listUrl += `<tr><td>${urls[i]}</td></tr>`;
-    }
+  for (let i = 0; i < urls.length; i++) {
+    listUrl += `<tr><td>${urls[i]}</td></tr>`;
+  }
 
-    document.getElementById("table-url").innerHTML = listUrl;
-    //end show table
-  });
+  tableUrl.innerHTML = listUrl;
+  //end show table
+});
 //end show all
 
 //begin button delete
-document.getElementById("url-delete").addEventListener("change", function () {
-  if (document.getElementById("url-delete").value === "") {
-    document.getElementById("btn-delete").disabled = true;
+docDelUrl.addEventListener("change", function () {
+  if (docDelUrl.value === "") {
+    btnDel.disabled = true;
   } else {
-    document.getElementById("btn-delete").disabled = false;
+    btnDel.disabled = false;
   }
 });
 //end button delete
 
 //begin input delete url
-document.getElementById("btn-delete").addEventListener("click", function () {
-  let urlDelete = document.getElementById("url-delete").value;
+btnDel.addEventListener("click", function () {
+  let urlDelete = docDelUrl.value;
   let urls = JSON.parse(localStorage.getItem("urls"));
-
   let patternHttps = /https/gim;
+  let resultHttps = patternHttps.test(urlDelete); //test exist https
+
   urlDelete = urlDelete.replace(/\s/g, "");
-  let resultHttps = patternHttps.test(urlDelete);
 
   if (!resultHttps) {
     urlDelete = "https://" + urlDelete + "/";
@@ -111,28 +110,12 @@ document.getElementById("btn-delete").addEventListener("click", function () {
     if (result !== undefined) {
       let newArrayUrls = urls.filter((item) => item !== urlDelete);
       localStorage.setItem("urls", JSON.stringify(newArrayUrls));
-
-      browser.notifications.create("", {
-        title: `${manifest.name}`,
-        iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-        message: `Trang ${urlDelete} đã được xóa khỏi danh sách chặn`,
-        type: "basic",
-      });
+      browserNof(urlDelete, "đã được xóa khỏi danh sách chặn");
     } else {
-      browser.notifications.create("", {
-        title: `${manifest.name}`,
-        iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-        message: `Trang ${urlDelete} của bạn không có trong danh sách chặn`,
-        type: "basic",
-      });
+      browserNof(urlDelete, "không có trong danh sách chặn");
     }
   } else {
-    browser.notifications.create("", {
-      title: `${manifest.name}`,
-      iconUrl: browser.runtime.getURL("icons/icon-60.png"),
-      message: `Trang ${urlDelete} của bạn không có trong danh sách chặn`,
-      type: "basic",
-    });
+    browserNof(urlDelete, "không có trong danh sách chặn");
   }
 
   browser.runtime.reload();

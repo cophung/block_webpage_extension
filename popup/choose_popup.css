@@ -18,19 +18,19 @@ body {
   margin-top: 15px;
 }
 
-#newUrl,
+#new-url,
 #url-delete {
   flex-grow: 1;
 }
 
-.show-all {
+#show-all {
   padding: 4px;
   font-size: 1.3em;
   text-align: center;
   cursor: pointer;
 }
 
-.show-all:hover {
+#show-all:hover {
   background-color: #cff2f2;
 }
 
