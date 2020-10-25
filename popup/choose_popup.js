@@ -10,8 +10,8 @@ let tableUrl = document.getElementById("table-url");
 btnAdd.disabled = true;
 btnDel.disabled = true;
 
-function browserNof(newUrl, event) {
-  browser.notifications.create("", {
+function browserNof(id, newUrl, event) {
+  browser.notifications.create(id, {
     title: `${manifest.name}`,
     iconUrl: browser.runtime.getURL("icons/icon-60.png"),
     message: `Trang ${newUrl} ${event}`,
@@ -34,16 +34,16 @@ btnAdd.addEventListener("click", function () {
 
   if (urls) {
     if (urls.find((item) => item === newUrl)) {
-      browserNof(newUrl, "đã tồn tại trong danh sách chặn");
+      browserNof("handlePopup", newUrl, "đã tồn tại trong danh sách chặn");
     } else {
       urls.push(newUrl);
-      browserNof(newUrl, "đã được thêm vào danh sách chặn");
+      browserNof("handlePopup", newUrl, "đã được thêm vào danh sách chặn");
     }
   } else {
     localStorage.setItem("urls", JSON.stringify([]));
     urls = JSON.parse(localStorage.getItem("urls"));
     urls.push(newUrl);
-    browserNof(newUrl, "đã được thêm vào danh sách chặn");
+    browserNof("handlePopup", newUrl, "đã được thêm vào danh sách chặn");
   }
 
   localStorage.setItem("urls", JSON.stringify(urls));
@@ -110,12 +110,12 @@ btnDel.addEventListener("click", function () {
     if (result !== undefined) {
       let newArrayUrls = urls.filter((item) => item !== urlDelete);
       localStorage.setItem("urls", JSON.stringify(newArrayUrls));
-      browserNof(urlDelete, "đã được xóa khỏi danh sách chặn");
+      browserNof("handlePopup", urlDelete, "đã được xóa khỏi danh sách chặn");
     } else {
-      browserNof(urlDelete, "không có trong danh sách chặn");
+      browserNof("handlePopup", urlDelete, "không có trong danh sách chặn");
     }
   } else {
-    browserNof(urlDelete, "không có trong danh sách chặn");
+    browserNof("handlePopup", urlDelete, "không có trong danh sách chặn");
   }
 
   browser.runtime.reload();
